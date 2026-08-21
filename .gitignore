@@ -3,7 +3,7 @@ venv/
 
 # Data and models (too large / not meant for git)
 data/
-models/
+#models/
 
 # Secrets
 .env
