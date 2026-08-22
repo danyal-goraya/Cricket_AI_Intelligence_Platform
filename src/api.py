@@ -101,15 +101,21 @@ def predict_win_probability(situation: MatchSituation):
         "input": situation.dict()
     }
 
-shot_model = ShotClassifier(input_size=72, num_classes=4)
-shot_model.load_state_dict(torch.load("../models/shot_classifier_v2.pth", map_location="cpu"))
-shot_model.eval()
+_shot_model = None
+_shot_label_encoder = None
+_shot_feature_scaler = None
+_pose_detector = None
 
-shot_label_encoder = joblib.load("../models/shot_label_encoder.pkl")
-shot_feature_scaler = joblib.load("../models/shot_feature_scaler.pkl")
-
-mp_pose = mp.solutions.pose
-pose_detector = mp_pose.Pose(static_image_mode=True, min_detection_confidence=0.3)
+def get_shot_classifier_resources():
+    global _shot_model, _shot_label_encoder, _shot_feature_scaler, _pose_detector
+    if _shot_model is None:
+        _shot_model = ShotClassifier(input_size=72, num_classes=4)
+        _shot_model.load_state_dict(torch.load("../models/shot_classifier_v2.pth", map_location="cpu"))
+        _shot_model.eval()
+        _shot_label_encoder = joblib.load("../models/shot_label_encoder.pkl")
+        _shot_feature_scaler = joblib.load("../models/shot_feature_scaler.pkl")
+        _pose_detector = mp.solutions.pose.Pose(static_image_mode=True, min_detection_confidence=0.3)
+    return _shot_model, _shot_label_encoder, _shot_feature_scaler, _pose_detector
 
 import json
 import os
@@ -163,17 +169,19 @@ def get_filter_options():
         "teams": sorted(teams),
         "years": sorted(years, reverse=True)
     }
-with open("../data/precomputed_replays.json") as f:
-    PRECOMPUTED_REPLAYS = json.load(f)
+REPLAYS_FOLDER = "../data/replays"
 
 @app.get("/replay/{match_id}")
 def get_match_replay(match_id: str):
-    replay = PRECOMPUTED_REPLAYS.get(match_id)
-    if replay is None:
+    filepath = os.path.join(REPLAYS_FOLDER, f"{match_id}.json")
+    if not os.path.exists(filepath):
         return {"error": "Match not found"}
-    return replay
+    with open(filepath) as f:
+        return json.load(f)
 @app.post("/classify-shot")
 async def classify_shot(file: UploadFile = File(...)):
+    shot_model, shot_label_encoder, shot_feature_scaler, pose_detector = get_shot_classifier_resources()
+
     contents = await file.read()
 
     nparr = np.frombuffer(contents, np.uint8)
