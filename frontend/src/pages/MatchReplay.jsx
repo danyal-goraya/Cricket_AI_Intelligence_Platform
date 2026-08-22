@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts'
+
 function CustomTooltip({ active, payload }) {
   if (!active || !payload || !payload.length) return null
   const point = payload[0].payload
@@ -23,6 +24,7 @@ function CustomTooltip({ active, payload }) {
     </div>
   )
 }
+
 function MatchReplay() {
   const [teams, setTeams] = useState([])
   const [years, setYears] = useState([])
@@ -35,20 +37,20 @@ function MatchReplay() {
   const [visiblePoints, setVisiblePoints] = useState([])
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [loadError, setLoadError] = useState(null)
 
   const API = import.meta.env.VITE_API_URL
 
-  // Load dropdown options once on page load
   useEffect(() => {
     fetch(`${API}/matches/filters`)
       .then(res => res.json())
       .then(data => {
-        setTeams(data.teams)
-        setYears(data.years)
+        setTeams(data.teams || [])
+        setYears(data.years || [])
       })
+      .catch(err => console.error('Failed to load filters:', err))
   }, [])
 
-  // Search whenever filters change
   useEffect(() => {
     const params = new URLSearchParams()
     if (team) params.append('team', team)
@@ -57,7 +59,8 @@ function MatchReplay() {
 
     fetch(`${API}/matches/search?${params.toString()}`)
       .then(res => res.json())
-      .then(data => setResults(data))
+      .then(data => setResults(Array.isArray(data) ? data : []))
+      .catch(err => console.error('Failed to search matches:', err))
   }, [team, opponent, year])
 
   const selectMatch = (match) => {
@@ -66,15 +69,26 @@ function MatchReplay() {
     setVisiblePoints([])
     setCurrentIndex(0)
     setIsPlaying(false)
+    setLoadError(null)
 
     fetch(`${API}/replay/${match.match_id}`)
       .then(res => res.json())
-      .then(data => setReplayData(data))
+      .then(data => {
+        if (data && data.timeline) {
+          setReplayData(data)
+        } else {
+          setLoadError('Could not load this match\'s data. Please try another match.')
+          console.error('Replay data missing timeline:', data)
+        }
+      })
+      .catch(err => {
+        setLoadError('Could not connect to the API. Please try again.')
+        console.error('Failed to fetch replay data:', err)
+      })
   }
 
-  // Auto-play animation
   useEffect(() => {
-    if (!isPlaying || !replayData) return
+    if (!isPlaying || !replayData || !replayData.timeline) return
     if (currentIndex >= replayData.timeline.length) {
       setIsPlaying(false)
       return
@@ -83,19 +97,19 @@ function MatchReplay() {
     const timer = setTimeout(() => {
       setVisiblePoints(replayData.timeline.slice(0, currentIndex + 1))
       setCurrentIndex(currentIndex + 1)
-    },150)
+    }, 150)
 
     return () => clearTimeout(timer)
   }, [isPlaying, currentIndex, replayData])
 
   const stepForward = () => {
-    if (!replayData || currentIndex >= replayData.timeline.length) return
+    if (!replayData || !replayData.timeline || currentIndex >= replayData.timeline.length) return
     setVisiblePoints(replayData.timeline.slice(0, currentIndex + 1))
     setCurrentIndex(currentIndex + 1)
   }
 
   const stepBack = () => {
-    if (currentIndex <= 0) return
+    if (!replayData || !replayData.timeline || currentIndex <= 0) return
     setCurrentIndex(currentIndex - 1)
     setVisiblePoints(replayData.timeline.slice(0, currentIndex - 1))
   }
@@ -149,7 +163,17 @@ function MatchReplay() {
         </div>
       </div>
 
-      {replayData && (
+      {loadError && (
+        <div className="shot-error" style={{ marginTop: '20px' }}>{loadError}</div>
+      )}
+
+      {selectedMatch && !replayData && !loadError && (
+        <div className="panel replay-panel" style={{ textAlign: 'center', color: 'rgba(242,237,225,0.5)' }}>
+          Loading match data…
+        </div>
+      )}
+
+      {replayData && replayData.timeline && (
         <div className="panel replay-panel">
           <div className="replay-header">
             <div>
@@ -165,7 +189,8 @@ function MatchReplay() {
               </div>
             </div>
           </div>
-                  {replayData.turning_point && (
+
+          {replayData.turning_point && (
             <div className="turning-point">
               <div className="turning-point-label">⚡ Turning Point</div>
               <div className="turning-point-text">
@@ -180,7 +205,8 @@ function MatchReplay() {
               </div>
             </div>
           )}
-        <ResponsiveContainer width="100%" height={220}>
+
+          <ResponsiveContainer width="100%" height={220}>
             <LineChart data={visiblePoints}>
               <XAxis
                 dataKey="ball"
@@ -199,11 +225,17 @@ function MatchReplay() {
                 dot={false}
                 isAnimationActive={false}
               />
-                            {replayData.turning_point && visiblePoints.length > replayData.turning_point.timeline_index && (
-                <ReferenceLine x={replayData.timeline[replayData.turning_point.timeline_index].ball} stroke="#A13D2B" strokeDasharray="3 3" />
+              {replayData.turning_point &&
+                replayData.timeline &&
+                visiblePoints.length > replayData.turning_point.timeline_index && (
+                <ReferenceLine
+                  x={replayData.timeline[replayData.turning_point.timeline_index].ball}
+                  stroke="#A13D2B"
+                  strokeDasharray="3 3"
+                />
               )}
             </LineChart>
-        </ResponsiveContainer>
+          </ResponsiveContainer>
 
           <div className="replay-controls">
             <button className="control-btn" onClick={reset}>⟲ Reset</button>
