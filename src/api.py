@@ -163,103 +163,15 @@ def get_filter_options():
         "teams": sorted(teams),
         "years": sorted(years, reverse=True)
     }
+with open("../data/precomputed_replays.json") as f:
+    PRECOMPUTED_REPLAYS = json.load(f)
 
 @app.get("/replay/{match_id}")
 def get_match_replay(match_id: str):
-    filepath = os.path.join(DATA_FOLDER, f"{match_id}.json")
-    if not os.path.exists(filepath):
+    replay = PRECOMPUTED_REPLAYS.get(match_id)
+    if replay is None:
         return {"error": "Match not found"}
-
-    with open(filepath) as f:
-        match = json.load(f)
-
-    if len(match['innings']) < 2:
-        return {"error": "This match has no second innings"}
-
-    outcome = match['info'].get('outcome', {})
-    winner = outcome.get('winner', None)
-    teams = match['info'].get('teams', [])
-
-    first_innings = match['innings'][0]
-    second_innings = match['innings'][1]
-    chasing_team = second_innings['team']
-
-    target = 0
-    for over in first_innings['overs']:
-        for delivery in over['deliveries']:
-            target += delivery.get('runs', {}).get('total', 0)
-    target += 1
-
-    current_score = 0
-    wickets_fallen = 0
-    balls_bowled = 0
-    total_balls_in_innings = 120
-
-    timeline = []
-
-    for over in second_innings['overs']:
-        for delivery in over['deliveries']:
-            balls_bowled += 1
-            runs = delivery.get('runs', {}).get('total', 0)
-            current_score += runs
-            is_wicket = 'wickets' in delivery
-            if is_wicket:
-                wickets_fallen += len(delivery['wickets'])
-
-            runs_needed = max(target - current_score, 0)
-            balls_remaining = max(total_balls_in_innings - balls_bowled, 0)
-            wickets_in_hand = 10 - wickets_fallen
-
-            if runs_needed == 0:
-                win_prob = 100.0
-            elif wickets_in_hand <= 0:
-                win_prob = 0.0
-            else:
-                balls_for_rate = max(balls_remaining, 1)
-                current_run_rate = (current_score / balls_bowled) * 6 if balls_bowled > 0 else 0
-                required_run_rate = (runs_needed / balls_for_rate) * 6
-
-                features = np.array([[runs_needed, balls_for_rate, wickets_in_hand, current_run_rate, required_run_rate]])
-                win_prob = round(float(model.predict_proba(features)[0][1]) * 100, 2)
-
-            timeline.append({
-                "over": over['over'] + 1,
-                "ball": balls_bowled,
-                "score": current_score,
-                "wickets": wickets_fallen,
-                "runs_this_ball": runs,
-                "is_wicket": is_wicket,
-                "win_probability": win_prob
-            })
-
-        # Find the turning point: the ball with the single biggest probability swing
-    turning_point = None
-    biggest_swing = 0
-
-    for i in range(1, len(timeline)):
-        swing = abs(timeline[i]['win_probability'] - timeline[i-1]['win_probability'])
-        if swing > biggest_swing:
-            biggest_swing = swing
-            turning_point = {
-                "over": timeline[i]['over'],
-                "ball_in_over": ((timeline[i]['ball'] - 1) % 6) + 1,
-                "before_probability": timeline[i-1]['win_probability'],
-                "after_probability": timeline[i]['win_probability'],
-                "swing": round(swing, 2),
-                "was_wicket": timeline[i]['is_wicket'],
-                "runs_this_ball": timeline[i]['runs_this_ball'],
-                "timeline_index": i
-            }
-
-    return {
-        "match_id": match_id,
-        "teams": teams,
-        "chasing_team": chasing_team,
-        "target": target,
-        "winner": winner,
-        "timeline": timeline,
-        "turning_point": turning_point
-    }
+    return replay
 @app.post("/classify-shot")
 async def classify_shot(file: UploadFile = File(...)):
     contents = await file.read()
