@@ -128,23 +128,30 @@ with open("../data/player_index.json") as f:
 with open("../data/player_aliases.json") as f:
     PLAYER_ALIASES = json.load(f)
 
+from difflib import get_close_matches
+
 @app.get("/players/search")
 def search_players(q: str = ""):
     if not q or len(q) < 2:
         return []
     q_lower = q.lower()
 
-    matches = set()
+    exact_matches = set()
     for name in PLAYER_INDEX:
         if q_lower in name.lower():
-            matches.add(name)
+            exact_matches.add(name)
 
     for official_name, aliases in PLAYER_ALIASES.items():
         for alias in aliases:
             if q_lower in alias.lower():
-                matches.add(official_name)
+                exact_matches.add(official_name)
 
-    return sorted(matches)[:15]
+    if exact_matches:
+        return sorted(exact_matches)[:15]
+
+    # Fuzzy fallback: catches typos or close spellings, works for ALL 1,726 players
+    close = get_close_matches(q, PLAYER_INDEX, n=10, cutoff=0.6)
+    return close
 
 @app.get("/players/{player_name}")
 def get_player_stats(player_name: str):
