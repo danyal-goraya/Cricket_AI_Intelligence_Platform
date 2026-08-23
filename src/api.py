@@ -221,6 +221,34 @@ def get_match_replay(match_id: str):
         return {"error": "Match not found"}
     with open(filepath) as f:
         return json.load(f)
+with open("../data/moment_leaderboard.json") as f:
+    MOMENT_LEADERBOARD = json.load(f)
+
+with open("../data/venue_reports.json") as f:
+    VENUE_REPORTS = json.load(f)
+
+@app.get("/leaderboard/moments")
+def get_moment_leaderboard(moment_type: str = "", team: str = ""):
+    results = MOMENT_LEADERBOARD
+
+    if moment_type:
+        results = [m for m in results if m['moment_type'] == moment_type]
+
+    if team:
+        team_lower = team.lower()
+        results = [
+            m for m in results
+            if any(team_lower in t.lower() for t in m['teams'])
+        ]
+
+    return results
+
+@app.get("/venues/{venue_name}")
+def get_venue_report(venue_name: str):
+    report = VENUE_REPORTS.get(venue_name)
+    if report is None:
+        return {"error": "Venue not found"}
+    return report
 @app.post("/classify-shot")
 async def classify_shot(file: UploadFile = File(...)):
     shot_model, shot_label_encoder, shot_feature_scaler, pose_detector = get_shot_classifier_resources()
