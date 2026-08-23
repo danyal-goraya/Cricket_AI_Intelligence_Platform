@@ -8,6 +8,9 @@ import torch.nn as nn
 import mediapipe as mp
 import cv2
 from fastapi import File, UploadFile
+import json
+import os
+
 
 def calculate_angle(a, b, c):
     a, b, c = np.array(a), np.array(b), np.array(c)
@@ -136,8 +139,6 @@ def get_player_stats(player_name: str):
     if stats is None:
         return {"error": "Player not found"}
     return stats
-import json
-import os
 
 DATA_FOLDER = "../data/t20s_male_json"
 
