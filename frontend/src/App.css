@@ -306,6 +306,7 @@ input[type="range"]::-webkit-slider-thumb {
   text-decoration: none;
   color: var(--chalk);
   transition: border-color 0.2s ease, background 0.2s ease;
+  text-align: left;
 }
 
 .feature-card:hover {
@@ -609,6 +610,7 @@ input[type="range"]::-webkit-slider-thumb {
   margin-bottom: 36px;
   padding-bottom: 36px;
   border-bottom: 1px solid rgba(242,237,225,0.08);
+  text-align: left;
 }
 
 .about-section:last-of-type {
@@ -622,6 +624,8 @@ input[type="range"]::-webkit-slider-thumb {
   color: rgba(232,163,61,0.3);
   flex-shrink: 0;
   width: 60px;
+  text-align: left;
+  line-height: 1;
 }
 
 .about-section h3 {
@@ -629,6 +633,7 @@ input[type="range"]::-webkit-slider-thumb {
   font-size: 24px;
   margin: 0 0 8px;
   color: var(--amber);
+  text-align: left;
 }
 
 .about-section p {
@@ -636,6 +641,8 @@ input[type="range"]::-webkit-slider-thumb {
   line-height: 1.6;
   color: rgba(242,237,225,0.75);
   margin: 0;
+  text-align: left;
+  max-width: 60ch;
 }
 
 .tech-stack-row {
@@ -829,15 +836,29 @@ input[type="range"]::-webkit-slider-thumb {
     gap: 4px;
   }
 
-  .about-section {
+.about-section {
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
+    text-align: left;
   }
 
   .about-number {
     width: auto;
     font-size: 28px;
+    text-align: left;
   }
+
+  .about-section h3,
+  .about-section p {
+    text-align: left;
+  }
+
+  .subtitle {
+  text-align: center;
+  max-width: 60ch;
+  margin-left: auto;
+  margin-right: auto;
+}
 
   .about-section h3 {
     font-size: 20px;
@@ -942,4 +963,11 @@ input[type="range"]::-webkit-slider-thumb {
 
 .nav-logo:hover {
   color: var(--amber);
+}
+.feature-card p {
+  font-size: 14px;
+  color: rgba(242,237,225,0.65);
+  margin: 0 0 12px;
+  line-height: 1.5;
+  max-width: 55ch;
 }
