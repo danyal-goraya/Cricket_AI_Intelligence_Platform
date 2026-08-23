@@ -5,6 +5,7 @@ import './App.css'
 import MatchReplay from './pages/MatchReplay'
 import ShotCoach from './pages/ShotCoach'
 import About from './pages/About'
+import PlayerAnalytics from './pages/PlayerAnalytics'
 function NavBar() {
   const location = useLocation()
   const isActive = (path) => location.pathname === path
@@ -18,6 +19,7 @@ function NavBar() {
         <Link to="/replay" className={isActive('/replay') ? 'active' : ''}>Replay</Link>
         <Link to="/shot-coach" className={isActive('/shot-coach') ? 'active' : ''}>Shot Coach</Link>
         <Link to="/about" className={isActive('/about') ? 'active' : ''}>About</Link>
+        <Link to="/players" className={isActive('/players') ? 'active' : ''}>Players</Link>
       </div>
     </nav>
   )
@@ -33,6 +35,7 @@ function App() {
         <Route path="/replay" element={<MatchReplay />} />
         <Route path="/shot-coach" element={<ShotCoach />} />
         <Route path="/about" element={<About />} />
+        <Route path="/players" element={<PlayerAnalytics />} />
       </Routes>
     </BrowserRouter>
   )

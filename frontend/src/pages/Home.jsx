@@ -30,6 +30,12 @@ function Home() {
           <p>Upload a batting clip and get AI-powered shot classification using pose estimation and neural networks.</p>
           <span className="feature-arrow">Explore →</span>
         </Link>
+        <Link to="/players" className="feature-card">
+          <div className="feature-eyebrow">Live Tool</div>
+          <h3>Player Analytics</h3>
+          <p>Search any of 1,700+ players for a deep scouting report — phase-wise form, risk profile, and head-to-head matchups.</p>
+          <span className="feature-arrow">Explore →</span>
+        </Link>
       </div>
 
       <div className="stats-row">
