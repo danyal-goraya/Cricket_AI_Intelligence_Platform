@@ -116,7 +116,26 @@ def get_shot_classifier_resources():
         _shot_feature_scaler = joblib.load("../models/shot_feature_scaler.pkl")
         _pose_detector = mp.solutions.pose.Pose(static_image_mode=True, min_detection_confidence=0.3)
     return _shot_model, _shot_label_encoder, _shot_feature_scaler, _pose_detector
+with open("../data/player_stats.json") as f:
+    PLAYER_STATS = json.load(f)
 
+with open("../data/player_index.json") as f:
+    PLAYER_INDEX = json.load(f)
+
+@app.get("/players/search")
+def search_players(q: str = ""):
+    if not q or len(q) < 2:
+        return []
+    q_lower = q.lower()
+    matches = [name for name in PLAYER_INDEX if q_lower in name.lower()]
+    return matches[:15]
+
+@app.get("/players/{player_name}")
+def get_player_stats(player_name: str):
+    stats = PLAYER_STATS.get(player_name)
+    if stats is None:
+        return {"error": "Player not found"}
+    return stats
 import json
 import os
 
