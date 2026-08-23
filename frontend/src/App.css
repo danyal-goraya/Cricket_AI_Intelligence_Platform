@@ -21,9 +21,9 @@ body {
 }
 
 .page {
-  max-width: 640px;
+  max-width: 680px;
   margin: 0 auto;
-  padding: 64px 24px 80px;
+  padding: clamp(32px, 6vw, 64px) 24px 80px;
 }
 
 .eyebrow {
@@ -38,7 +38,7 @@ body {
 .title {
   font-family: 'Big Shoulders Display', sans-serif;
   font-weight: 800;
-  font-size: 64px;
+  font-size: clamp(36px, 8vw, 64px);
   line-height: 0.95;
   margin: 0 0 8px;
   letter-spacing: -0.01em;
@@ -151,11 +151,12 @@ input[type="range"]::-webkit-slider-thumb {
 .scoreboard-number {
   font-family: 'Big Shoulders Display', sans-serif;
   font-weight: 800;
-  font-size: 96px;
+  font-size: clamp(48px, 12vw, 96px);
   line-height: 1;
   color: var(--amber);
   font-variant-numeric: tabular-nums;
   transition: color 0.4s ease;
+  word-break: break-word;
 }
 
 .scoreboard-number.low {
@@ -234,11 +235,12 @@ input[type="range"]::-webkit-slider-thumb {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 32px;
+  padding: 20px 24px;
   border-bottom: 1px solid rgba(242,237,225,0.1);
-  max-width: 900px;
+  max-width: 720px;
   margin: 0 auto;
-  gap: 24px;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
 .nav-logo {
@@ -281,7 +283,7 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .home-title {
-  font-size: 80px;
+  font-size: clamp(42px, 10vw, 80px);
 }
 
 .home-subtitle {
@@ -653,4 +655,291 @@ input[type="range"]::-webkit-slider-thumb {
   color: var(--amber);
   padding: 6px 12px;
   border-radius: 20px;
+}
+/* ===== Responsive adjustments ===== */
+@media (max-width: 640px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px 20px;
+  }
+
+  .nav-links {
+    gap: 16px;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .page {
+    padding: 32px 16px 60px;
+  }
+
+  .title {
+    font-size: 40px;
+  }
+
+  .home-title {
+    font-size: 48px;
+  }
+
+  .subtitle,
+  .home-subtitle {
+    font-size: 14px;
+  }
+
+  .panel {
+    padding: 20px;
+  }
+
+  .scoreboard-number {
+    font-size: 56px;
+  }
+
+  .replay-score,
+  .replay-prob-number {
+    font-size: 32px;
+  }
+
+  .replay-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .replay-prob {
+    text-align: left;
+  }
+
+  .stats-row {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .stat-number {
+    font-size: 28px;
+  }
+
+  .filter-row {
+    flex-direction: column;
+  }
+
+  .about-section {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .about-number {
+    width: auto;
+  }
+
+  .confidence-label {
+    width: 90px;
+    font-size: 10px;
+  }
+
+  .replay-controls {
+    flex-wrap: wrap;
+  }
+
+  .control-btn,
+  .replay-play {
+    min-width: 45%;
+  }
+}
+
+@media (max-width: 400px) {
+  .title {
+    font-size: 32px;
+  }
+
+  .home-title {
+    font-size: 38px;
+  }
+
+  .shot-result-name {
+    font-size: 40px;
+  }
+}
+/* ===== Responsive & alignment polish ===== */
+
+@media (max-width: 768px) {
+  .replay-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .replay-prob {
+    text-align: left;
+    width: 100%;
+  }
+
+  .replay-prob-number {
+    font-size: clamp(40px, 10vw, 56px);
+  }
+
+  .stats-row {
+    flex-wrap: wrap;
+    gap: 24px 32px;
+    justify-content: flex-start;
+  }
+
+  .stat {
+    text-align: left;
+    flex: 1 1 40%;
+  }
+}
+
+@media (max-width: 640px) {
+  .navbar {
+    padding: 16px 20px;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .nav-links {
+    justify-content: center;
+    width: 100%;
+    gap: 14px 20px;
+  }
+
+  .subtitle,
+  .home-subtitle {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .panel {
+    padding: 20px 16px;
+  }
+
+  .field-label {
+    font-size: 11px;
+  }
+
+  .filter-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .match-result {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .about-section {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .about-number {
+    width: auto;
+    font-size: 28px;
+  }
+
+  .about-section h3 {
+    font-size: 20px;
+  }
+
+  .about-section p {
+    font-size: 13px;
+  }
+
+  .confidence-row {
+    gap: 8px;
+  }
+
+  .confidence-label {
+    width: 100px;
+    font-size: 10px;
+  }
+
+  .confidence-value {
+    width: 36px;
+    font-size: 11px;
+  }
+
+  .replay-controls {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .control-btn {
+    flex: 1 1 42%;
+    padding: 12px 8px;
+    font-size: 11px;
+  }
+
+  .replay-play {
+    flex: 1 1 100%;
+    order: -1;
+  }
+
+  .turning-point-text {
+    font-size: 12px;
+  }
+
+  .upload-prompt {
+    padding: 24px 16px;
+  }
+
+  .upload-prompt p {
+    font-size: 14px;
+  }
+
+  .feature-card {
+    padding: 20px;
+  }
+
+  .feature-card h3 {
+    font-size: 24px;
+  }
+
+  .feature-card p {
+    font-size: 13px;
+  }
+
+  .tech-stack-row {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 380px) {
+  .nav-links {
+    gap: 10px 14px;
+  }
+
+  .nav-links a {
+    font-size: 11px;
+  }
+
+  .calc-button {
+    font-size: 12px;
+    padding: 14px;
+  }
+
+  .shot-result-name {
+    font-size: clamp(32px, 11vw, 44px);
+  }
+}
+
+/* Ensure long text never overflows its container on any screen */
+.page, .panel, .feature-card, .about-section {
+  overflow-wrap: break-word;
+}
+
+/* Center footer note consistently at all widths */
+.footer-note {
+  text-align: center;
+  padding: 0 12px;
+}
+.nav-logo {
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.nav-logo:hover {
+  color: var(--amber);
 }
