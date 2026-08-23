@@ -125,13 +125,26 @@ with open("../data/player_stats.json") as f:
 with open("../data/player_index.json") as f:
     PLAYER_INDEX = json.load(f)
 
+with open("../data/player_aliases.json") as f:
+    PLAYER_ALIASES = json.load(f)
+
 @app.get("/players/search")
 def search_players(q: str = ""):
     if not q or len(q) < 2:
         return []
     q_lower = q.lower()
-    matches = [name for name in PLAYER_INDEX if q_lower in name.lower()]
-    return matches[:15]
+
+    matches = set()
+    for name in PLAYER_INDEX:
+        if q_lower in name.lower():
+            matches.add(name)
+
+    for official_name, aliases in PLAYER_ALIASES.items():
+        for alias in aliases:
+            if q_lower in alias.lower():
+                matches.add(official_name)
+
+    return sorted(matches)[:15]
 
 @app.get("/players/{player_name}")
 def get_player_stats(player_name: str):
