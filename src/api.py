@@ -152,6 +152,9 @@ def search_players(q: str = ""):
     # Fuzzy fallback: catches typos or close spellings, works for ALL 1,726 players
     close = get_close_matches(q, PLAYER_INDEX, n=10, cutoff=0.6)
     return close
+@app.get("/players/aliases")
+def get_player_aliases():
+    return PLAYER_ALIASES
 
 @app.get("/players/{player_name}")
 def get_player_stats(player_name: str):
