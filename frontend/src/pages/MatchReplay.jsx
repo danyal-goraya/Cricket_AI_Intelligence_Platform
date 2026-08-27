@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts'
-
+import { useLocation } from 'react-router-dom'
 function CustomTooltip({ active, payload }) {
   if (!active || !payload || !payload.length) return null
   const point = payload[0].payload
@@ -40,7 +40,7 @@ function MatchReplay() {
   const [loadError, setLoadError] = useState(null)
 
   const API = import.meta.env.VITE_API_URL
-
+  const location = useLocation()
   useEffect(() => {
     fetch(`${API}/matches/filters`)
       .then(res => res.json())
@@ -62,7 +62,13 @@ function MatchReplay() {
       .then(data => setResults(Array.isArray(data) ? data : []))
       .catch(err => console.error('Failed to search matches:', err))
   }, [team, opponent, year])
-
+  // Auto-select a match if navigated here from the Moment Leaderboard
+  useEffect(() => {
+    const openMatchId = location.state?.openMatchId
+    if (openMatchId) {
+      selectMatch({ match_id: openMatchId, team_1: '', team_2: '' })
+    }
+  }, [location.state])
   const selectMatch = (match) => {
     setSelectedMatch(match)
     setReplayData(null)

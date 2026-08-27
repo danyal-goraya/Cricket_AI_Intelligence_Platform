@@ -1196,3 +1196,144 @@ input[type="range"]::-webkit-slider-thumb {
     font-size: 10px;
   }
 }
+.moment-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.moment-filter-btn {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(242,237,225,0.15);
+  color: rgba(242,237,225,0.6);
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.moment-filter-btn:hover {
+  border-color: var(--amber);
+}
+
+.moment-filter-btn.active {
+  background: rgba(232,163,61,0.12);
+  border-color: var(--amber);
+  color: var(--amber);
+}
+
+.moment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.moment-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(242,237,225,0.1);
+  border-left: 3px solid var(--amber);
+  border-radius: 4px;
+  padding: 16px 18px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.moment-card:hover {
+  background: rgba(255,255,255,0.06);
+  transform: translateX(2px);
+}
+
+.moment-rank {
+  font-family: 'Big Shoulders Display', sans-serif;
+  font-weight: 800;
+  font-size: 24px;
+  color: rgba(242,237,225,0.25);
+  flex-shrink: 0;
+  width: 40px;
+}
+
+.moment-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.moment-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.moment-type-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.moment-swing {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: rgba(242,237,225,0.5);
+}
+
+.moment-teams {
+  font-family: 'Big Shoulders Display', sans-serif;
+  font-size: 20px;
+  color: var(--chalk);
+  margin-bottom: 4px;
+}
+
+.moment-detail {
+  font-size: 13px;
+  color: rgba(242,237,225,0.7);
+  line-height: 1.5;
+}
+
+.moment-detail strong {
+  color: var(--chalk);
+}
+
+.moment-venue {
+  font-size: 11px;
+  color: rgba(242,237,225,0.4);
+  margin-top: 6px;
+}
+
+.moment-arrow {
+  color: var(--amber);
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .moment-card {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .moment-rank {
+    font-size: 18px;
+    width: 28px;
+  }
+
+  .moment-teams {
+    font-size: 16px;
+  }
+
+  .moment-detail {
+    font-size: 12px;
+  }
+
+  .moment-arrow {
+    display: none;
+  }
+}

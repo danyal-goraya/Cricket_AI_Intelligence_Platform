@@ -6,6 +6,7 @@ import MatchReplay from './pages/MatchReplay'
 import ShotCoach from './pages/ShotCoach'
 import About from './pages/About'
 import PlayerAnalytics from './pages/PlayerAnalytics'
+import MomentLeaderboard from './pages/MomentLeaderboard'
 function NavBar() {
   const location = useLocation()
   const isActive = (path) => location.pathname === path
@@ -20,6 +21,7 @@ function NavBar() {
         <Link to="/shot-coach" className={isActive('/shot-coach') ? 'active' : ''}>Shot Coach</Link>
         <Link to="/about" className={isActive('/about') ? 'active' : ''}>About</Link>
         <Link to="/players" className={isActive('/players') ? 'active' : ''}>Players</Link>
+        <Link to="/moments" className={isActive('/moments') ? 'active' : ''}>Moments</Link>
       </div>
     </nav>
   )
@@ -36,6 +38,7 @@ function App() {
         <Route path="/shot-coach" element={<ShotCoach />} />
         <Route path="/about" element={<About />} />
         <Route path="/players" element={<PlayerAnalytics />} />
+        <Route path="/moments" element={<MomentLeaderboard />} />
       </Routes>
     </BrowserRouter>
   )
