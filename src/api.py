@@ -293,3 +293,60 @@ async def classify_shot(file: UploadFile = File(...)):
         "is_confident": is_confident,
         "all_predictions": predictions
     }
+@app.post("/simulate")
+def simulate_chase(payload: dict):
+    target = payload.get("target", 0)
+    deliveries = payload.get("deliveries", [])
+    total_balls_in_innings = 120
+
+    current_score = 0
+    wickets_fallen = 0
+    balls_bowled = 0
+    timeline = []
+
+    for d in deliveries:
+        if wickets_fallen >= 10:
+            break
+
+        balls_bowled += 1
+        runs = d.get("runs", 0)
+        is_wicket = d.get("is_wicket", False)
+        current_score += runs
+        if is_wicket:
+            wickets_fallen += 1
+
+        runs_needed = max(target - current_score, 0)
+        balls_remaining = max(total_balls_in_innings - balls_bowled, 0)
+        wickets_in_hand = 10 - wickets_fallen
+
+        if runs_needed == 0:
+            win_prob = 100.0
+        elif wickets_in_hand <= 0:
+            win_prob = 0.0
+        else:
+            balls_for_rate = max(balls_remaining, 1)
+            current_run_rate = (current_score / balls_bowled) * 6 if balls_bowled > 0 else 0
+            required_run_rate = (runs_needed / balls_for_rate) * 6
+            features = np.array([[runs_needed, balls_for_rate, wickets_in_hand, current_run_rate, required_run_rate]])
+            win_prob = round(float(model.predict_proba(features)[0][1]) * 100, 2)
+
+        timeline.append({
+            "over": ((balls_bowled - 1) // 6) + 1,
+            "ball": balls_bowled,
+            "score": current_score,
+            "wickets": wickets_fallen,
+            "runs_this_ball": runs,
+            "is_wicket": is_wicket,
+            "win_probability": win_prob
+        })
+
+        if runs_needed == 0:
+            break
+
+    all_out = wickets_fallen >= 10
+
+    return {
+        "timeline": timeline,
+        "target": target,
+        "all_out": all_out
+    }
