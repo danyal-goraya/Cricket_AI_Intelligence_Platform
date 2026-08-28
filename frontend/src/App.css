@@ -1540,3 +1540,15 @@ input[type="range"]::-webkit-slider-thumb {
     transform: none;
   }
 }
+/* ===== Guaranteed centering for page hero text (eyebrow, title, subtitle) ===== */
+.eyebrow,
+.title,
+.subtitle {
+  text-align: center;
+}
+
+.subtitle {
+  max-width: 60ch;
+  margin-left: auto;
+  margin-right: auto;
+}
