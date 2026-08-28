@@ -36,6 +36,12 @@ function Home() {
           <p>Search any of 1,700+ players for a deep scouting report — phase-wise form, risk profile, and head-to-head matchups.</p>
           <span className="feature-arrow">Explore →</span>
         </Link>
+        <Link to="/rewrite-history" className="feature-card">
+  <div className="feature-eyebrow">Live Tool</div>
+  <h3>Rewrite History</h3>
+  <p>Change any ball's outcome in a real match and watch your AI model react — see how one moment could have changed everything.</p>
+  <span className="feature-arrow">Explore →</span>
+</Link>
         <Link to="/moments" className="feature-card">
   <div className="feature-eyebrow">Live Tool</div>
   <h3>Moment of the Match</h3>

@@ -7,6 +7,7 @@ import ShotCoach from './pages/ShotCoach'
 import About from './pages/About'
 import PlayerAnalytics from './pages/PlayerAnalytics'
 import MomentLeaderboard from './pages/MomentLeaderboard'
+import RewriteHistory from './pages/RewriteHistory'
 function NavBar() {
   const location = useLocation()
   const isActive = (path) => location.pathname === path
@@ -22,6 +23,7 @@ function NavBar() {
         <Link to="/about" className={isActive('/about') ? 'active' : ''}>About</Link>
         <Link to="/players" className={isActive('/players') ? 'active' : ''}>Players</Link>
         <Link to="/moments" className={isActive('/moments') ? 'active' : ''}>Moments</Link>
+        <Link to="/rewrite-history" className={isActive('/rewrite-history') ? 'active' : ''}>Rewrite History</Link>
       </div>
     </nav>
   )
@@ -39,6 +41,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/players" element={<PlayerAnalytics />} />
         <Route path="/moments" element={<MomentLeaderboard />} />
+        <Route path="/rewrite-history" element={<RewriteHistory />} />
       </Routes>
     </BrowserRouter>
   )
