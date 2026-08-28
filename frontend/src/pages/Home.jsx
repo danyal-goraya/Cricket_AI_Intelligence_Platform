@@ -48,6 +48,12 @@ function Home() {
   <p>Browse the most dramatic mid-innings turnarounds ever recorded — auto-detected across 3,500+ matches.</p>
   <span className="feature-arrow">Explore →</span>
 </Link>
+<Link to="/compare" className="feature-card">
+  <div className="feature-eyebrow">Live Tool</div>
+  <h3>Head to Head</h3>
+  <p>Compare any two players side by side — including a clutch rating showing who actually performs better under pressure.</p>
+  <span className="feature-arrow">Explore →</span>
+</Link>
       </div>
 
       <div className="stats-row">

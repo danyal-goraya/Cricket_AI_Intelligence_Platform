@@ -8,6 +8,7 @@ import About from './pages/About'
 import PlayerAnalytics from './pages/PlayerAnalytics'
 import MomentLeaderboard from './pages/MomentLeaderboard'
 import RewriteHistory from './pages/RewriteHistory'
+import PlayerComparison from './pages/PlayerComparison'
 function NavBar() {
   const location = useLocation()
   const isActive = (path) => location.pathname === path
@@ -24,6 +25,7 @@ function NavBar() {
         <Link to="/players" className={isActive('/players') ? 'active' : ''}>Players</Link>
         <Link to="/moments" className={isActive('/moments') ? 'active' : ''}>Moments</Link>
         <Link to="/rewrite-history" className={isActive('/rewrite-history') ? 'active' : ''}>Rewrite History</Link>
+        <Link to="/compare" className={isActive('/compare') ? 'active' : ''}>Compare</Link>
       </div>
     </nav>
   )
@@ -42,6 +44,7 @@ function App() {
         <Route path="/players" element={<PlayerAnalytics />} />
         <Route path="/moments" element={<MomentLeaderboard />} />
         <Route path="/rewrite-history" element={<RewriteHistory />} />
+        <Route path="/compare" element={<PlayerComparison />} />
       </Routes>
     </BrowserRouter>
   )
