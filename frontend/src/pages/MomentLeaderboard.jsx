@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const MOMENT_CONFIG = {
-  collapse: { icon: '💥', label: 'Collapse', color: '#A13D2B' },
-  assault: { icon: '⚡', label: 'Assault', color: '#E8A33D' },
-  squeeze: { icon: '🎯', label: 'Squeeze', color: '#1B5E3A' },
-  boundary: { icon: '🔥', label: 'Boundary', color: '#E8A33D' }
+  collapse: { icon: '💥', label: 'Collapse', color: '#A13D2B', description: 'Multiple wickets fell in quick succession' },
+  assault: { icon: '⚡', label: 'Assault', color: '#E8A33D', description: 'A sudden burst of boundaries shifted momentum' },
+  squeeze: { icon: '🎯', label: 'Squeeze', color: '#1B5E3A', description: 'A single wicket at a critical, pressure-filled moment' },
+  boundary: { icon: '🔥', label: 'Boundary', color: '#E8A33D', description: 'One big hit instantly changed the outlook' }
 }
 
 function MomentLeaderboard() {
@@ -36,11 +36,23 @@ function MomentLeaderboard() {
 
   return (
     <div className="page">
-      <div className="eyebrow">Moment of the Match</div>
+            <div className="eyebrow">Moment of the Match</div>
       <h1 className="title">Greatest Turnarounds</h1>
       <p className="subtitle">
-        The most dramatic mid-innings swings across 3,500+ matches, auto-detected by tracking every shift in win probability.
+        No editor picked these. Your AI model watched 3,500+ matches ball-by-ball and found the moments where a team's fate flipped fastest — the shocks nobody saw coming.
       </p>
+
+      <div className="moment-legend">
+        {Object.entries(MOMENT_CONFIG).map(([key, cfg]) => (
+          <div key={key} className="moment-legend-item">
+            <span className="moment-legend-icon" style={{ color: cfg.color }}>{cfg.icon}</span>
+            <div>
+              <div className="moment-legend-label" style={{ color: cfg.color }}>{cfg.label}</div>
+              <div className="moment-legend-desc">{cfg.description}</div>
+            </div>
+          </div>
+        ))}
+      </div>
 
       <div className="moment-filters">
         <button
@@ -66,7 +78,11 @@ function MomentLeaderboard() {
         </div>
       )}
 
-      {!loading && (
+           {!loading && moments.length === 0 && (
+        <p className="empty-note">No moments found for this filter.</p>
+      )}
+
+      {!loading && moments.length > 0 && (
         <div className="moment-list">
           {moments.map((m, i) => {
             const cfg = MOMENT_CONFIG[m.moment_type] || MOMENT_CONFIG.boundary
