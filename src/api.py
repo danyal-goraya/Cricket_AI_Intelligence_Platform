@@ -350,3 +350,15 @@ def simulate_chase(payload: dict):
         "target": target,
         "all_out": all_out
     }
+@app.get("/players/compare")
+def compare_players(player1: str, player2: str):
+    p1 = PLAYER_STATS.get(player1)
+    p2 = PLAYER_STATS.get(player2)
+
+    if p1 is None or p2 is None:
+        return {"error": "One or both players not found"}
+
+    return {
+        "player1": p1,
+        "player2": p2
+    }
