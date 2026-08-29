@@ -98,9 +98,16 @@ function ShotCoach() {
           <div className="shot-error">{result.error}</div>
         )}
 
-        {result && !result.error && (
+               {result && !result.error && (
           <div className="result">
-            {result.is_confident ? (
+            {result.is_likely_not_batting ? (
+              <>
+                <div className="result-label">Uncertain Result</div>
+                <p className="commentary" style={{ marginTop: '8px' }}>
+                  This doesn't look like a clear cricket batting stance — the model works best on photos where the batter is mid-shot, bat visible, full body in frame. Try uploading an actual batting photo for an accurate read.
+                </p>
+              </>
+            ) : result.is_confident ? (
               <>
                 <div className="result-label">Predicted Shot</div>
                 <div className="scoreboard-number shot-result-name">
