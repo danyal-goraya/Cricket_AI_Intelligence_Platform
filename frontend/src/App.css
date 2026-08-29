@@ -1645,3 +1645,197 @@ input[type="range"]::-webkit-slider-thumb {
     font-size: 9px;
   }
 }
+/* ===================================================== */
+/* ============  GLOBAL POLISH PASS  ==================== */
+/* ===================================================== */
+
+/* Smooth everything by default */
+* {
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Page entrance animation */
+.page {
+  animation: pageEnter 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stagger panels and cards slightly for a nicer cascade */
+.panel {
+  animation: panelEnter 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 0.08s;
+}
+
+@keyframes panelEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Give panels real depth */
+.panel {
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+}
+
+/* Feature cards: lift + glow on hover, not just border color */
+.feature-card {
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+}
+
+.feature-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.28), 0 0 0 1px rgba(232,163,61,0.15);
+}
+
+/* Match/moment result rows: subtle lift too */
+.match-result:hover,
+.moment-card:hover {
+  transform: translateX(3px);
+}
+
+/* Buttons: satisfying press feedback */
+.calc-button,
+.control-btn,
+.player-tab,
+.moment-filter-btn,
+.ball-item {
+  transform-origin: center;
+}
+
+.calc-button:active:not(:disabled),
+.control-btn:active,
+.ball-item:active {
+  transform: scale(0.96);
+}
+
+/* Inputs: glow on focus instead of flat border change */
+input[type="text"]:focus,
+.player-search-input:focus,
+.filter-row select:focus {
+  outline: none;
+  border-color: var(--amber);
+  box-shadow: 0 0 0 3px rgba(232,163,61,0.15);
+}
+
+/* Scoreboard numbers: gentle pop-in when they update */
+.scoreboard-number {
+  animation: numberPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes numberPop {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Loading states: shimmer instead of static text */
+.loading-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(242,237,225,0.04) 0%,
+    rgba(242,237,225,0.09) 50%,
+    rgba(242,237,225,0.04) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  border-radius: 4px;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Custom scrollbar (webkit browsers) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--pitch-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(232,163,61,0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(232,163,61,0.5);
+}
+
+/* Nav link underline sweep on hover, more premium than plain color change */
+.nav-links a {
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--amber);
+  transition: width 0.2s ease;
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+  width: 100%;
+}
+
+/* Mobile: real tap feedback since there's no hover */
+@media (hover: none) {
+  .feature-card:active,
+  .match-result:active,
+  .moment-card:active {
+    background: rgba(255,255,255,0.06);
+  }
+
+  .calc-button:active,
+  .control-btn:active {
+    opacity: 0.85;
+  }
+}
+
+/* Tighten and even out section rhythm */
+.result {
+  animation: panelEnter 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Smooth chart tooltip appearance handled by recharts, but style the container nicely */
+.recharts-wrapper {
+  animation: fadeIn 0.5s ease both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Prevent the global transition rule from making page loads feel janky */
+.page, .panel {
+  will-change: transform, opacity;
+}
