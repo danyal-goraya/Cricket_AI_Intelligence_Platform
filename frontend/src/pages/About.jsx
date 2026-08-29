@@ -50,6 +50,16 @@ function About() {
       <div className="about-section">
         <div className="about-number">05</div>
         <div>
+          <h3>Head to Head Comparison</h3>
+          <p>
+            Compare any two players directly, including a "clutch rating" — how much a player's strike rate changes specifically in high-pressure chasing situations versus comfortable ones. It's a data-driven answer to the question every fan argues about: who actually performs when it matters most.
+          </p>
+        </div>
+      </div>
+
+      <div className="about-section">
+        <div className="about-number">06</div>
+        <div>
           <h3>Moment of the Match</h3>
           <p>
             No editor picked these highlights — the win probability model did. By scanning every ball of every match for the sharpest mid-innings swings, it automatically surfaces the most dramatic collapses, assaults, and squeezes in the dataset, each one auto-classified by pattern, not by hand.
@@ -58,7 +68,7 @@ function About() {
       </div>
 
       <div className="about-section">
-        <div className="about-number">06</div>
+        <div className="about-number">07</div>
         <div>
           <h3>Rewrite History</h3>
           <p>
@@ -68,7 +78,7 @@ function About() {
       </div>
 
       <div className="about-section">
-        <div className="about-number">07</div>
+        <div className="about-number">08</div>
         <div>
           <h3>The Platform</h3>
           <p>
