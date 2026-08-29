@@ -297,11 +297,13 @@ async def classify_shot(file: UploadFile = File(...)):
 
     top_confidence = predictions[0]['confidence']
     is_confident = top_confidence >= 55
+    is_likely_not_batting = top_confidence < 35
 
     return {
         "predicted_shot": predictions[0]['shot'],
         "confidence": top_confidence,
         "is_confident": is_confident,
+        "is_likely_not_batting": is_likely_not_batting,
         "all_predictions": predictions
     }
 @app.post("/simulate")
